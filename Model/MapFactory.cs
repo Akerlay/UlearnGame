@@ -45,11 +45,19 @@ namespace UlearnGame.Model
 				case 'P':
 					return CreateObjectByTypeName("Player");
 				case 'E':
-					return CreateObjectByTypeName("Cobold");
+					return CreateObjectByTypeName("Enemy");
 				case 'W':
 					return CreateObjectByTypeName("Wall");
 				case 'C':
 					return CreateObjectByTypeName("Chest");
+				case 'K':
+					return CreateObjectByTypeName("Key");
+				case 'B':
+					return CreateObjectByTypeName("Bottle");
+				case 'H':
+					return CreateObjectByTypeName("Hearth");
+				case 'F':
+					return CreateObjectByTypeName("FakeWall");
 				case ' ':
 					return null;
 				default:

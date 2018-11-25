@@ -46,13 +46,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Chest.cs" />
-    <Compile Include="Model\Cobold.cs" />
+    <Compile Include="Model\FakeWall.cs" />
+    <Compile Include="Model\Hearth.cs" />
+    <Compile Include="Model\Key.cs" />
+    <Compile Include="Model\Enemy.cs" />
     <Compile Include="Model\Direction.cs" />
     <Compile Include="Model\GameModel.cs" />
     <Compile Include="Model\GameObject.cs" />
     <Compile Include="Model\Map.cs" />
     <Compile Include="Model\MapFactory.cs" />
     <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Bottle.cs" />
     <Compile Include="Model\Wall.cs" />
     <Compile Include="View\GameViewInitializer.cs">
       <DependentUpon>GameView.cs</DependentUpon>
@@ -63,7 +67,6 @@
     <Compile Include="View\SoundSystem.cs" />
     <Compile Include="View\Sprite.cs" />
     <Compile Include="View\Sprites.cs" />
-    <EmbeddedResource Include="Images\floor.bmp" />
     <EmbeddedResource Include="Images\fog.png" />
     <EmbeddedResource Include="Images\player.png" />
     <EmbeddedResource Include="Maps\data.txt" />
@@ -90,7 +93,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\floor2.png" />
+    <Content Include="Sounds\bottle.wav" />
+    <Content Include="Sounds\chest.wav" />
+    <Content Include="Sounds\classic_hurt.wav" />
+    <Content Include="Sounds\key.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

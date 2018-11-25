@@ -1,10 +1,11 @@
+using System;
 using System.Drawing;
 
 namespace UlearnGame.View
 {
 	public class Sprite
 	{
-		private Bitmap bitmap;
+		private readonly Bitmap bitmap;
 
 		public Sprite(string filepath)
 		{
@@ -12,7 +13,7 @@ namespace UlearnGame.View
 			{
 				bitmap = new Bitmap(filepath);
 			}
-			catch
+			catch (ArgumentException e)
 			{
 				bitmap = new Bitmap("Images/missing.png");
 			}

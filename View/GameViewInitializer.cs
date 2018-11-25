@@ -40,7 +40,7 @@ namespace UlearnGame.View
 			Controls.Add(pictureBox1);
 			KeyPreview = true;
 			Name = "GameView";
-			Text = "GameView";
+			Text = "Dungeon Crawler";
 			Load += OnLoad;
 			KeyPress += OnKeyPress;
 			((System.ComponentModel.ISupportInitialize) pictureBox1).EndInit();
