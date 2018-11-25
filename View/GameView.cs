@@ -78,11 +78,6 @@ namespace UlearnGame.View
 			}
 		}
 
-		private void OnStateChanged()
-		{
-			pictureBox1.Invalidate();
-		}
-		
-		
+		private void OnStateChanged() => pictureBox1.Invalidate();
 	}
 }
