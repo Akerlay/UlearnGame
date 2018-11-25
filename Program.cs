@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
-using UlearnGame.Model;
 using UlearnGame.View;
 
 namespace UlearnGame
@@ -15,8 +12,8 @@ namespace UlearnGame
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			var model = new GameModel();
-			Application.Run(new GameForm(model));
+
+			Application.Run(new GameView());
 		}
 	}
 }

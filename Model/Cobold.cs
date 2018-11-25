@@ -1,6 +1,6 @@
 namespace UlearnGame.Model
 {
-	public class Player : GameObject
+	public class Cobold : GameObject
 	{
 		
 	}

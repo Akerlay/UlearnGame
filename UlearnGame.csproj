@@ -45,17 +45,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Enemy.cs" />
+    <Compile Include="Model\Chest.cs" />
+    <Compile Include="Model\Cobold.cs" />
+    <Compile Include="Model\Direction.cs" />
     <Compile Include="Model\GameModel.cs" />
-    <Compile Include="Model\Maps.cs" />
+    <Compile Include="Model\GameObject.cs" />
+    <Compile Include="Model\Map.cs" />
     <Compile Include="Model\MapFactory.cs" />
     <Compile Include="Model\Player.cs" />
-    <Compile Include="View\GameForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Model\Wall.cs" />
+    <Compile Include="Test\FOVRecurse.cs" />
+    <Compile Include="Test\GameModel.cs" />
+    <Compile Include="View\GameViewInitializer.cs">
+      <DependentUpon>GameView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\GameObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\GameView.cs" />
+    <Compile Include="View\SoundSystem.cs" />
+    <Compile Include="View\Sprite.cs" />
+    <Compile Include="View\Sprites.cs" />
+    <EmbeddedResource Include="Images\floor.bmp" />
+    <EmbeddedResource Include="Images\fog.png" />
+    <EmbeddedResource Include="Images\player.png" />
+    <EmbeddedResource Include="Maps\data.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -79,7 +92,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\Sprites\" />
+    <Content Include="Images\floor2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

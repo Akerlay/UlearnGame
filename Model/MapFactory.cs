@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -16,12 +16,12 @@ namespace UlearnGame.Model
 				throw new Exception($"Wrong map '{map}'");
 			var result = new GameObject[rows[0].Length, rows.Length];
 			for (var x = 0; x < rows[0].Length; x++)
-				for (var y = 0; y < rows.Length; y++)
-					result[x, y] = CreateCreatureBySymbol(rows[y][x]);
+			for (var y = 0; y < rows.Length; y++)
+				result[x, y] = CreateObjectBySymbol(rows[y][x]);
 			return result;
 		}
 
-		private static GameObject CreateCreatureByTypeName(string name)
+		private static GameObject CreateObjectByTypeName(string name)
 		{
 			if (!factory.ContainsKey(name))
 			{
@@ -38,14 +38,18 @@ namespace UlearnGame.Model
 		}
 
 
-		private static GameObject CreateCreatureBySymbol(char c)
+		private static GameObject CreateObjectBySymbol(char c)
 		{
 			switch (c)
 			{
 				case 'P':
-					return CreateCreatureByTypeName("Player");
+					return CreateObjectByTypeName("Player");
 				case 'E':
-					return CreateCreatureByTypeName("Enemy");
+					return CreateObjectByTypeName("Cobold");
+				case 'W':
+					return CreateObjectByTypeName("Wall");
+				case 'C':
+					return CreateObjectByTypeName("Chest");
 				case ' ':
 					return null;
 				default:

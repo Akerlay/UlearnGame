@@ -1,25 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace UlearnGame.Model
 {
-	class GameModel
+	public class GameModel
 	{
-		public GameObject[,] Map;
 		public event Action StateChanged;
+		public Map Map = new Map();
 
 		public GameModel()
 		{
-			Map = Maps.Test;
-			var a = 0;
+			
 		}
 
-		public void Start()
+		public void MovePlayer(Direction dir)
 		{
-			throw new NotImplementedException();
+			switch (dir)
+			{
+					case Direction.Up:
+						break;
+					case Direction.Down:
+						break;
+					case Direction.Left:
+						break;
+					case Direction.Right:
+						break;
+			}
+			Map.MovePlayer(dir);
+			StateChanged?.Invoke();
 		}
+		
 	}
 }
