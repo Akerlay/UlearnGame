@@ -54,8 +54,6 @@
     <Compile Include="Model\MapFactory.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Wall.cs" />
-    <Compile Include="Test\FOVRecurse.cs" />
-    <Compile Include="Test\GameModel.cs" />
     <Compile Include="View\GameViewInitializer.cs">
       <DependentUpon>GameView.cs</DependentUpon>
     </Compile>
