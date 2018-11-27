@@ -1,11 +1,14 @@
 using System.Drawing;
+using UlearnGame.Model.GameObjects;
 
 
 namespace UlearnGame.Model
 {
 	public class Map
 	{
-		private GameObject[,] map = MapFactory.CreateMap(@"
+		private GameObject[,] map;
+		
+		/*private static GameObject[,] lv1 = MapFactory.CreateMap(model, @"
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 WPW             W   E         W
 W WWWW   WWWW K W   WWWWWWWWWCW
@@ -29,7 +32,43 @@ W   WK       WH               W
 W   W        W                W
 W   W        W                W
 WBHKW        E               CW
-WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");*/
+
+
+		public Map(GameModel model)
+		{
+			map = MapFactory.CreateMap(model, @"
+##################################################
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                        E                       #
+#                ####    #                       #
+#                   ###  C                       #
+#                   #    B                       #
+#                   #E   K                       #
+#                   #  P H                       #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+#                                                #
+##################################################");
+		}
 
 		public int Width => map.GetLength(0);
 		public int Height => map.GetLength(1);

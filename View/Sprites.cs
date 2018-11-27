@@ -13,6 +13,6 @@ namespace UlearnGame.View
 		public static readonly Sprite Key = new Sprite("Images/key.png");
 		public static readonly Sprite Bottle = new Sprite("Images/blue_bottle.png");
 		public static readonly Sprite Hearth = new Sprite("Images/hearth.png");
-		
+		public static readonly Sprite Fireball = new Sprite("Images/fireball.png");
 	}
 }

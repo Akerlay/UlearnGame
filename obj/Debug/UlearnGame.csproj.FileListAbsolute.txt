@@ -1,0 +1,9 @@
+C:\Users\Кирилл\Desktop\UlearnGame\bin\Debug\UlearnGame.exe.config
+C:\Users\Кирилл\Desktop\UlearnGame\bin\Debug\UlearnGame.exe
+C:\Users\Кирилл\Desktop\UlearnGame\bin\Debug\UlearnGame.pdb
+C:\Users\Кирилл\Desktop\UlearnGame\obj\Debug\UlearnGame.csprojResolveAssemblyReference.cache
+C:\Users\Кирилл\Desktop\UlearnGame\obj\Debug\UlearnGame.Properties.Resources.resources
+C:\Users\Кирилл\Desktop\UlearnGame\obj\Debug\UlearnGame.csproj.GenerateResource.cache
+C:\Users\Кирилл\Desktop\UlearnGame\obj\Debug\UlearnGame.csproj.CoreCompileInputs.cache
+C:\Users\Кирилл\Desktop\UlearnGame\obj\Debug\UlearnGame.exe
+C:\Users\Кирилл\Desktop\UlearnGame\obj\Debug\UlearnGame.pdb

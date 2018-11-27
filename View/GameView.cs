@@ -5,11 +5,13 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using UlearnGame.Model;
+using UlearnGame.Model.GameObjects;
 
 namespace UlearnGame.View
 {
 	public partial class GameView : Form
 	{
+		private Timer timer;
 		private GameModel model;
 		private const int viewWidth = 30;
 		private const int viewHeight = 30;
@@ -19,7 +21,9 @@ namespace UlearnGame.View
 		
 		public GameView()
 		{
-			model = new GameModel();
+			timer = new Timer {Interval = 500};
+			timer.Start();
+			model = new GameModel(timer);
 			InitializeComponent();
 		}
 		
@@ -64,6 +68,10 @@ namespace UlearnGame.View
 					
 					switch (obj)
 					{
+						case Fireball _:
+							g.DrawImage(Sprites.Fireball, new Point(x * TileWidth, y * TileHeight));
+							break;
+						
 						case Wall _:
 							g.DrawImage(Sprites.CobbleWalls, new Point(x * TileWidth, y * TileHeight));
 							break;
@@ -102,7 +110,7 @@ namespace UlearnGame.View
 
 		private void EndGame()
 		{
-			model = new GameModel();
+			model = new GameModel(timer);
 			OnLoad(new EventArgs());
 		}
 
@@ -123,7 +131,7 @@ namespace UlearnGame.View
 				for (var y = 0; y < model.Map.Height; y++)
 				{
 					if ((playerPos.X - x) * (playerPos.X - x) + (playerPos.Y - y) * (playerPos.Y - y)
-					    > playerFov * playerFov  || model.Map[x, y] is Wall || model.Map[x, y] is FakeWall)
+					    > playerFov * playerFov  && !(model.Map[x, y] is Wall) && !(model.Map[x, y] is FakeWall))
 					{
 						g.DrawImage(Sprites.Fog, new Point(x * TileWidth, y * TileHeight));
 					}
@@ -162,20 +170,19 @@ namespace UlearnGame.View
 			switch (e.KeyChar.ToString().ToLower())
 			{
 				case "w":
-					model.MovePlayer(Direction.Up);
-					pictureBox1.Focus();
+					model.Player.Move(Direction.Up);
 					break;
 				
 				case "s":
-					model.MovePlayer(Direction.Down);
+					model.Player.Move(Direction.Down);
 					break;
 
 				case "a":
-					model.MovePlayer(Direction.Left);
+					model.Player.Move(Direction.Left);
 					break;
 
 				case "d":
-					model.MovePlayer(Direction.Right);
+					model.Player.Move(Direction.Right);
 					break;
 			}
 		}

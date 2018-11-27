@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Reflection;
+using UlearnGame.Model.GameObjects;
 
 namespace UlearnGame.Model
 {
 	public static class MapFactory
 	{
-		private static readonly Dictionary<string, Func<GameObject>> factory = new Dictionary<string, Func<GameObject>>();
-
-		public static GameObject[,] CreateMap(string map, string separator = "\r\n")
+		public static GameObject[,] CreateMap(GameModel model, string map, string separator = "\r\n")
 		{
 			var rows = map.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 			if (rows.Select(z => z.Length).Distinct().Count() != 1)
@@ -17,47 +15,34 @@ namespace UlearnGame.Model
 			var result = new GameObject[rows[0].Length, rows.Length];
 			for (var x = 0; x < rows[0].Length; x++)
 			for (var y = 0; y < rows.Length; y++)
-				result[x, y] = CreateObjectBySymbol(rows[y][x]);
+				result[x, y] = CreateObjectBySymbol(rows[y][x], model, new Point(x, y));
 			return result;
 		}
 
-		private static GameObject CreateObjectByTypeName(string name)
-		{
-			if (!factory.ContainsKey(name))
-			{
-				var type = Assembly
-					.GetExecutingAssembly()
-					.GetTypes()
-					.FirstOrDefault(z => z.Name == name);
-				if (type == null)
-					throw new Exception($"Can't find type '{name}'");
-				factory[name] = () => (GameObject)Activator.CreateInstance(type);
-			}
-
-			return factory[name]();
-		}
-
-
-		private static GameObject CreateObjectBySymbol(char c)
+		private static GameObject CreateObjectBySymbol(char c, GameModel model, Point position)
 		{
 			switch (c)
 			{
 				case 'P':
-					return CreateObjectByTypeName("Player");
+					return new Player(model);
 				case 'E':
-					return CreateObjectByTypeName("Enemy");
+					return new Enemy(model);
 				case 'W':
-					return CreateObjectByTypeName("Wall");
+					return new Wall();
+				case '#':
+					return new Wall();
 				case 'C':
-					return CreateObjectByTypeName("Chest");
+					return new Chest();
 				case 'K':
-					return CreateObjectByTypeName("Key");
+					return new Key();
 				case 'B':
-					return CreateObjectByTypeName("Bottle");
+					return new Bottle();
 				case 'H':
-					return CreateObjectByTypeName("Hearth");
+					return new Hearth();
 				case 'F':
-					return CreateObjectByTypeName("FakeWall");
+					return new FakeWall();
+				case '*': 
+					return new Fireball(model, position, Direction.Up);
 				case ' ':
 					return null;
 				default:
