@@ -1,12 +1,12 @@
 using System;
-using System.Drawing;
+using UlearnGame.DataStructures;
 
 namespace UlearnGame.Model.GameObjects
 {
 	public class Player : GameObject
 	{
-		private readonly GameModel model;
-		public int FieldOfView { get; private set; } = 3;
+		private Map map;
+		public int FieldOfView { get; private set; } = 2;
 		public int Keys { get; private set; }
 		public int Health { get; private set; } = 3;
 		public event Action DamageTaken;
@@ -14,44 +14,38 @@ namespace UlearnGame.Model.GameObjects
 		public event Action ChestTaken;
 		public event Action Dead;
 
-		public Player(GameModel model) => this.model = model;
+		public Player(Map map) => this.map = map;
 		
 		public void Move(Direction dir)
 		{
-			var oldPlayerPos = model.PlayerPosition;
+			var oldPlayerPos = map.PlayerPosition;
 			switch (dir)
 			{
 				case Direction.Up:
-					model.PlayerPosition = Move(oldPlayerPos,
-						new Point(model.PlayerPosition.X, model.PlayerPosition.Y - 1));
+					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X, map.PlayerPosition.Y - 1));
 					break;
 				
 				case Direction.Down:
-					model.PlayerPosition = Move(oldPlayerPos,
-						new Point(model.PlayerPosition.X, model.PlayerPosition.Y + 1));
+					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X, map.PlayerPosition.Y + 1));
 					break;
 				
 				case Direction.Left:
-					model.PlayerPosition = Move(oldPlayerPos,
-						new Point(model.PlayerPosition.X - 1, model.PlayerPosition.Y));
+					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X - 1, map.PlayerPosition.Y));
 					break;
 				
 				case Direction.Right:
-					model.PlayerPosition = Move(oldPlayerPos,
-						new Point(model.PlayerPosition.X + 1, model.PlayerPosition.Y));
+					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X + 1, map.PlayerPosition.Y));
 					break;
 			}
-			
-			model.ChangeState();
 		}
 
 		private Point Move(Point oldPlayerPos, Point destination)
 		{
 			if (IsCorrectMove(destination))
 			{
-				Interact(model.Map[destination]);
-				model.Map.SetCell(oldPlayerPos, null);
-				model.Map.SetCell(destination, this);
+				Interact(map[destination]);
+				map.SetCell(oldPlayerPos, null);
+				map.SetCell(destination, this);
 				return destination;
 			}
 
@@ -60,21 +54,30 @@ namespace UlearnGame.Model.GameObjects
 		
 		private bool IsCorrectMove(Point point)
 		{
-			return !(model.Map[point] is Wall) && !(model.Map[point] is Chest) || model.Map[point] is Chest && Keys > 0;
+			return !(map[point] is Wall) && !(map[point] is Chest) || map[point] is Chest && Keys > 0;
 		}
 		
-		public void Interact(GameObject other)
+		public override void Interact(GameObject other)
 		{
-			if (other is Bottle bottle)
-				IncreaseFov(bottle.Value);
-			if (other is Key)
-				AddKey();
-			if (other is Chest)
-				RemoveKey();
-			if (other is Enemy enemy)
-				GetDamage(enemy.Damage);
-			if (other is Hearth hearth)
-				Heal(hearth.Value);
+			switch (other)
+			{
+				case Bottle bottle:
+					IncreaseFov(bottle.Value);
+					break;
+				case Key _:
+					AddKey();
+					break;
+				case Chest _:
+					RemoveKey();
+					break;
+				case Enemy enemy:
+					GetDamage(enemy.Damage);
+					enemy.Kill();
+					break;
+				case Hearth hearth:
+					Heal(hearth.Value);
+					break;
+			}
 		}
 
 		private void IncreaseFov(int amount)

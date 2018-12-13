@@ -1,5 +1,5 @@
 using System;
-using System.Drawing;
+using UlearnGame.DataStructures;
 
 namespace UlearnGame.Model.GameObjects
 {
@@ -8,15 +8,14 @@ namespace UlearnGame.Model.GameObjects
 		private readonly Direction dir;
 		private Point position;
 
-		public Fireball(GameModel model, Point start, Direction dir) : base(model)
+		public Fireball(Map map, Point start, Direction dir) : base(map)
 		{
 			this.dir = dir;
 			position = start;
 			Damage = 250;
-			Model.timer.Tick += TryMove;
 		}
 
-		private void TryMove(object sender, EventArgs e)
+		private void TryMove()
 		{
 			var oldPos = position;
 			switch (dir)
@@ -43,21 +42,28 @@ namespace UlearnGame.Model.GameObjects
 		{
 			if (IsCorrectMove(destination))
 			{
-				if(Model.Map[destination] is Player p)
+				if(map[destination] is Player p)
 					p.Interact(this);
-				Model.Map.SetCell(oldPos, null);
-				Model.Map.SetCell(destination, this);
+				map.SetCell(oldPos, null);
+				map.SetCell(destination, this);
 				return destination;
 			}
-			else
-			{
-				Model.Map.SetCell(position, null);
-				Model.timer.Tick -= TryMove;
-			}
+
+			map.SetCell(position, null);
 
 			return oldPos;
 		}
-		
-		private bool IsCorrectMove(Point point) => !(Model.Map[point] is Wall);
+
+		public override void Update()
+		{
+			UpdCount += 1;
+			if (UpdCount == 10)
+			{
+				UpdCount = 0;
+				TryMove();
+			}
+		}
+
+		private bool IsCorrectMove(Point point) => !(map[point] is Wall);
 	}
 }

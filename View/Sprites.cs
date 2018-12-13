@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace UlearnGame.View
 {
 	public static class Sprites

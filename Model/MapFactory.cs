@@ -1,13 +1,13 @@
 using System;
-using System.Drawing;
 using System.Linq;
+using UlearnGame.DataStructures;
 using UlearnGame.Model.GameObjects;
 
 namespace UlearnGame.Model
 {
 	public static class MapFactory
 	{
-		public static GameObject[,] CreateMap(GameModel model, string map, string separator = "\r\n")
+		public static GameObject[,] CreateMap(Map mapObject, string map, string separator = "\r\n")
 		{
 			var rows = map.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 			if (rows.Select(z => z.Length).Distinct().Count() != 1)
@@ -15,18 +15,18 @@ namespace UlearnGame.Model
 			var result = new GameObject[rows[0].Length, rows.Length];
 			for (var x = 0; x < rows[0].Length; x++)
 			for (var y = 0; y < rows.Length; y++)
-				result[x, y] = CreateObjectBySymbol(rows[y][x], model, new Point(x, y));
+				result[x, y] = CreateObjectBySymbol(mapObject, rows[y][x], new Point(x, y));
 			return result;
 		}
 
-		private static GameObject CreateObjectBySymbol(char c, GameModel model, Point position)
+		private static GameObject CreateObjectBySymbol(Map mapObject, char c, Point position)
 		{
 			switch (c)
 			{
 				case 'P':
-					return new Player(model);
+					return new Player(mapObject);
 				case 'E':
-					return new Enemy(model);
+					return new Enemy(mapObject, position);
 				case 'W':
 					return new Wall();
 				case '#':
@@ -42,7 +42,7 @@ namespace UlearnGame.Model
 				case 'F':
 					return new FakeWall();
 				case '*': 
-					return new Fireball(model, position, Direction.Up);
+					return new Fireball(mapObject, position, Direction.Left);
 				case ' ':
 					return null;
 				default:

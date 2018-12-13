@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Windows.Forms;
 using UlearnGame.Model;
 using UlearnGame.Model.GameObjects;
@@ -12,34 +9,36 @@ namespace UlearnGame.View
 	public partial class GameView : Form
 	{
 		private Timer timer;
-		private GameModel model;
-		private const int viewWidth = 30;
-		private const int viewHeight = 30;
-
+		private Game game;
 		private const int TileHeight = 32;
 		private const int TileWidth = 32;
 		
 		public GameView()
 		{
-			timer = new Timer {Interval = 500};
+			timer = new Timer {Interval = 33};
+			timer.Tick += UpdateState;
 			timer.Start();
-			model = new GameModel(timer);
+			game = new Game();
 			InitializeComponent();
 		}
-		
+
+		private void UpdateState(object sender, EventArgs e)
+		{
+			game.Update();
+			pictureBox1.Invalidate();
+		}
+
 		private void OnLoad(object sender, EventArgs e)
 		{
-			model.StateChanged += OnStateChanged;
-
-			model.Player.Dead += EndGame;
-			model.Player.DamageTaken += SoundSystem.Damage;
-			model.Player.ItemTaken += SoundSystem.Item;
-			model.Player.ChestTaken += SoundSystem.Chest;
+			game.Player.Dead += EndGame;
+			game.Player.DamageTaken += SoundSystem.Damage;
+			game.Player.ItemTaken += SoundSystem.Item;
+			game.Player.ChestTaken += SoundSystem.Chest;
 			
-			pictureBox1.Width = model.Map.Width * TileWidth;
-			pictureBox1.Height = model.Map.Height * TileHeight;
-			Width = model.Map.Width * (TileWidth + 1);
-			Height = model.Map.Height * (TileHeight + 2);
+			pictureBox1.Width = game.Map.Width * TileWidth;
+			pictureBox1.Height = game.Map.Height * TileHeight;
+			Width = game.Map.Width * (TileWidth + 1);
+			Height = game.Map.Height * (TileHeight + 2);
 			FormBorderStyle = FormBorderStyle.FixedDialog;
 			MaximizeBox = false;
 		}
@@ -53,17 +52,17 @@ namespace UlearnGame.View
 
 		private void DrawVisibleCells(Graphics g)
 		{
-			var visiblePoints = GetVisiblePoints();
+			var visiblePoints = game.VisiblePoints;
 			
-			for (var x = 0; x < model.Map.Width; x++)
+			for (var x = 0; x < game.Map.Width; x++)
 			{
-				for (var y = 0; y < model.Map.Height; y++)
+				for (var y = 0; y < game.Map.Height; y++)
 				{
 					var currentPoint = new Point(x, y);
 					if (!visiblePoints.Contains(currentPoint)) continue;
 					
 					g.DrawImage(Sprites.CobbleFloor, new Point(x * TileWidth, y * TileHeight));
-					var obj = model.Map[currentPoint];
+					var obj = game.Map[currentPoint];
 					if(obj is null) continue;
 					
 					switch (obj)
@@ -110,28 +109,28 @@ namespace UlearnGame.View
 
 		private void EndGame()
 		{
-			model = new GameModel(timer);
+			game = new Game();
 			OnLoad(new EventArgs());
 		}
 
 		private void DrawUI(Graphics g)
 		{
-			for (var i = 0; i < model.Player.Health; i++)
+			for (var i = 0; i < game.Player.Health; i++)
 				g.DrawImage(Sprites.Hearth, new Point(i * 34, 0));
-			for (var i = 0; i < model.Player.Keys; i++)
+			for (var i = 0; i < game.Player.Keys; i++)
 				g.DrawImage(Sprites.Key, new Point(i * 34, 34));
 		}
 
 		private void DrawFog(Graphics g)
 		{
-			var playerFov = model.Player.FieldOfView;
-			var playerPos = model.PlayerPosition;
-			for (var x = 0; x < model.Map.Width; x++)
+			var playerFov = game.Player.FieldOfView;
+			var playerPos = game.PlayerPosition;
+			for (var x = 0; x < game.Map.Width; x++)
 			{
-				for (var y = 0; y < model.Map.Height; y++)
+				for (var y = 0; y < game.Map.Height; y++)
 				{
 					if ((playerPos.X - x) * (playerPos.X - x) + (playerPos.Y - y) * (playerPos.Y - y)
-					    > playerFov * playerFov  && !(model.Map[x, y] is Wall) && !(model.Map[x, y] is FakeWall))
+					    > playerFov * playerFov  && !(game.Map[x, y] is Wall) && !(game.Map[x, y] is FakeWall))
 					{
 						g.DrawImage(Sprites.Fog, new Point(x * TileWidth, y * TileHeight));
 					}
@@ -139,54 +138,26 @@ namespace UlearnGame.View
 			}
 		}
 
-		private HashSet<Point> GetVisiblePoints()
-		{
-			var visited = new HashSet<Point>();
-			var queue = new Queue<Tuple<Point, int>>();
-			queue.Enqueue(Tuple.Create(model.PlayerPosition, 0));
-			while (queue.Count != 0)
-			{
-				var point = queue.Dequeue();
-				if(visited.Contains(point.Item1)) continue;
-				visited.Add(point.Item1);
-				if (!(model.Map[point.Item1] is Wall || model.Map[point.Item1] is FakeWall) 
-				    && point.Item2 <= model.Player.FieldOfView)
-				{
-					for (var dx = -1; dx <= 1; dx++)
-					for (var dy = -1; dy <= 1; dy++)
-					{
-						if (dx != 0 && dy != 0) continue;
-						queue.Enqueue(Tuple.Create(new Point(point.Item1.X + dx, point.Item1.Y + dy), point.Item2 + 1));
-					}
-
-				}
-			}
-
-			return visited;
-		}
-
 		private void OnKeyPress(object sender, KeyPressEventArgs e)
 		{
 			switch (e.KeyChar.ToString().ToLower())
 			{
 				case "w":
-					model.Player.Move(Direction.Up);
+					game.Player.Move(Direction.Up);
 					break;
 				
 				case "s":
-					model.Player.Move(Direction.Down);
+					game.Player.Move(Direction.Down);
 					break;
 
 				case "a":
-					model.Player.Move(Direction.Left);
+					game.Player.Move(Direction.Left);
 					break;
 
 				case "d":
-					model.Player.Move(Direction.Right);
+					game.Player.Move(Direction.Right);
 					break;
 			}
 		}
-
-		private void OnStateChanged() => pictureBox1.Invalidate();
 	}
 }
