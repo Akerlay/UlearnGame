@@ -7,19 +7,20 @@ namespace UlearnGame.Model
 {
 	public class Game
 	{
-		public Map Map;
+		public readonly Map Map;
 		public Player Player => Map.Player;
-		public Point PlayerPosition => Map.PlayerPosition;
-		public HashSet<Point> VisiblePoints = new HashSet<Point>();
+		public Point PlayerPosition => Player.Position;
+		public readonly HashSet<Point> VisiblePoints = new HashSet<Point>();
+		public GameState State = new GameState();
 
 		public Game()
 		{
-			Map = new Map();
+			Map = new Map(State);
 		}
 
 		public Game(string map)
 		{
-			Map = new Map(map);
+			Map = new Map(map, State);
 		}
 		
 		private void UpdateVisiblePoints()
@@ -41,7 +42,10 @@ namespace UlearnGame.Model
 					for (var dy = -1; dy <= 1; dy++)
 					{
 						if (dx != 0 && dy != 0) continue;
-						queue.Enqueue(Tuple.Create(new Point(point.Item1.X + dx, point.Item1.Y + dy), point.Item2 + 1));
+						var nextPoint = new Point(point.Item1.X + dx, point.Item1.Y + dy);
+						if (!Map.InBounds(nextPoint)) continue;
+						
+						queue.Enqueue(Tuple.Create(nextPoint, point.Item2 + 1));
 					}
 				}
 			}
@@ -53,9 +57,8 @@ namespace UlearnGame.Model
 		public void Update()
 		{
 			UpdateVisiblePoints();
-			for (var i = 0; i < Map.Width; i++)
-			for (var j = 0; j < Map.Height; j++)
-				Map[i,j]?.Update();
+			Map.Update();
+			State.PlayerPosition = PlayerPosition;
 		}
 	}
 }

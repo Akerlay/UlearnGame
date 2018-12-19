@@ -22,7 +22,7 @@ namespace UlearnGame.View
 			InitializeComponent();
 		}
 
-		private void UpdateState(object sender, EventArgs e)
+		private async void UpdateState(object sender, EventArgs e)
 		{
 			game.Update();
 			pictureBox1.Invalidate();

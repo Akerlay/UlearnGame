@@ -65,6 +65,7 @@
     <Compile Include="Model\GameObjects\Key.cs" />
     <Compile Include="Model\GameObjects\Player.cs" />
     <Compile Include="Model\GameObjects\Wall.cs" />
+    <Compile Include="Model\GameState.cs" />
     <Compile Include="Model\Map.cs" />
     <Compile Include="Model\MapFactory.cs" />
     <Compile Include="Tests\MechanicsTests.cs" />
@@ -79,8 +80,10 @@
     <Compile Include="View\SoundSystem.cs" />
     <Compile Include="View\Sprite.cs" />
     <Compile Include="View\Sprites.cs" />
-    <EmbeddedResource Include="Images\fog.png" />
-    <EmbeddedResource Include="Images\player.png" />
+    <None Include="Images\fog.png" />
+    <EmbeddedResource Include="Images\player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Maps\data.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -106,10 +109,40 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Sounds\bottle.wav" />
-    <Content Include="Sounds\chest.wav" />
-    <Content Include="Sounds\classic_hurt.wav" />
-    <Content Include="Sounds\key.wav" />
+    <None Include="Images\blue_bottle.png" />
+    <None Include="Images\chest.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\cobble.bmp" />
+    <None Include="Images\cobble2.png" />
+    <EmbeddedResource Include="Images\fireball.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Images\floor_plates.png" />
+    <EmbeddedResource Include="Images\hearth.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\key.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\kobold.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\missing.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\bottle.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\chest.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\classic_hurt.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\key.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

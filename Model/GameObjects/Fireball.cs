@@ -6,52 +6,35 @@ namespace UlearnGame.Model.GameObjects
 	public class Fireball : Enemy
 	{
 		private readonly Direction dir;
-		private Point position;
 
-		public Fireball(Map map, Point start, Direction dir) : base(map)
+		public Fireball(Point position, Direction dir, bool disposable=true) : base(position)
 		{
 			this.dir = dir;
-			position = start;
 			Damage = 250;
+			if(disposable)
+				CanNotMoveTrough.Remove(typeof(Wall));
 		}
 
 		private void TryMove()
 		{
-			var oldPos = position;
 			switch (dir)
 			{
 				case Direction.Up:
-					position = Move(oldPos, new Point(position.X, position.Y - 1));
+					Destination = new Point(Position.X, Position.Y - 1);
 					break;
 				
 				case Direction.Down:
-					position = Move(oldPos, new Point(position.X, position.Y + 1));
+					Destination = new Point(Position.X, Position.Y + 1);
 					break;
 				
 				case Direction.Left:
-					position = Move(oldPos, new Point(position.X - 1, position.Y));
+					Destination = new Point(Position.X - 1, Position.Y);
 					break;
 				
 				case Direction.Right:
-					position = Move(oldPos, new Point(position.X + 1, position.Y));
+					Destination = new Point(Position.X + 1, Position.Y);
 					break;
 			}
-		}
-		
-		private Point Move(Point oldPos, Point destination)
-		{
-			if (IsCorrectMove(destination))
-			{
-				if(map[destination] is Player p)
-					p.Interact(this);
-				map.SetCell(oldPos, null);
-				map.SetCell(destination, this);
-				return destination;
-			}
-
-			map.SetCell(position, null);
-
-			return oldPos;
 		}
 
 		public override void Update()
@@ -64,6 +47,17 @@ namespace UlearnGame.Model.GameObjects
 			}
 		}
 
-		private bool IsCorrectMove(Point point) => !(map[point] is Wall);
+		public override bool Interact(GameObject other)
+		{
+			switch (other)
+			{
+					case Wall _:
+						return false;
+					case Player _:
+						return false;
+					default:
+						return true;
+			}
+		}
 	}
 }

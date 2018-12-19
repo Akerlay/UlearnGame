@@ -7,7 +7,7 @@ namespace UlearnGame.Model
 {
 	public static class MapFactory
 	{
-		public static GameObject[,] CreateMap(Map mapObject, string map, string separator = "\r\n")
+		public static GameObject[,] CreateMap(GameState state, string map, string separator = "\r\n")
 		{
 			var rows = map.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 			if (rows.Select(z => z.Length).Distinct().Count() != 1)
@@ -15,34 +15,34 @@ namespace UlearnGame.Model
 			var result = new GameObject[rows[0].Length, rows.Length];
 			for (var x = 0; x < rows[0].Length; x++)
 			for (var y = 0; y < rows.Length; y++)
-				result[x, y] = CreateObjectBySymbol(mapObject, rows[y][x], new Point(x, y));
+				result[x, y] = CreateObjectBySymbol(state, rows[y][x], new Point(x, y));
 			return result;
 		}
 
-		private static GameObject CreateObjectBySymbol(Map mapObject, char c, Point position)
+		private static GameObject CreateObjectBySymbol(GameState state, char c, Point position)
 		{
 			switch (c)
 			{
 				case 'P':
-					return new Player(mapObject);
+					return new Player(position);
 				case 'E':
-					return new Enemy(mapObject, position);
+					return new Enemy(position, state);
 				case 'W':
-					return new Wall();
+					return new Wall(position);
 				case '#':
-					return new Wall();
+					return new Wall(position);
 				case 'C':
-					return new Chest();
+					return new Chest(position);
 				case 'K':
-					return new Key();
+					return new Key(position);
 				case 'B':
-					return new Bottle();
+					return new Bottle(position);
 				case 'H':
-					return new Hearth();
+					return new Hearth(position);
 				case 'F':
-					return new FakeWall();
+					return new FakeWall(position);
 				case '*': 
-					return new Fireball(mapObject, position, Direction.Left);
+					return new Fireball(position, Direction.Left);
 				case ' ':
 					return null;
 				default:

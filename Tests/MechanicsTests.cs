@@ -192,8 +192,8 @@ W P B W
 WWWWWWW";
 			var model = new Game(map);
 			var initialFov = model.Player.FieldOfView;
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
 			Assert.AreEqual(model.Player.FieldOfView, initialFov + 1);
 		}
 
@@ -206,8 +206,8 @@ W P H W
 WWWWWWW";
 			var model = new Game(map);
 			var initialHealth = model.Player.Health;
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
 			Assert.AreEqual(model.Player.Health, initialHealth + 1);
 		}
 
@@ -220,8 +220,8 @@ W P K W
 WWWWWWW";
 			var model = new Game(map);
 			var initialKeys = model.Player.Keys;
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
 			Assert.AreEqual(model.Player.Keys, initialKeys + 1);
 		}
 
@@ -234,11 +234,11 @@ WP K CW
 WWWWWWW";
 			var model = new Game(map);
 			var initialKeys = model.Player.Keys;
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			Assert.IsTrue(model.Player.Keys == initialKeys && model.Map.PlayerPosition == new Point(5, 1));
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			Assert.IsTrue(model.Player.Keys == initialKeys && model.Map.Player.Position == new Point(5, 1));
 		}
 		
 		[Test]
@@ -249,11 +249,11 @@ WWWWWWW
 WP   CW
 WWWWWWW";
 			var model = new Game(map);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			Assert.AreEqual(model.Map.PlayerPosition, new Point(4, 1));
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			Assert.AreEqual(model.Map.Player.Position, new Point(5, 1));
 		}
 
 		[Test]
@@ -264,11 +264,11 @@ WWWWWWW
 WP F  W
 WWWWWWW";
 			var model = new Game(map);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			Assert.AreEqual(model.Map.PlayerPosition, new Point(5, 1));
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			Assert.AreEqual(model.Map.Player.Position, new Point(5, 1));
 		}
 		
 		[Test]
@@ -279,11 +279,17 @@ WWWWWWW
 WP W  W
 WWWWWWW";
 			var model = new Game(map);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			model.Player.Move(Direction.Right);
-			Assert.AreEqual(model.Map.PlayerPosition, new Point(2, 1));
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			MovePlayer(model, Direction.Right);
+			Assert.AreEqual(model.Map.Player.Position, new Point(2, 1));
+		}
+
+		private void MovePlayer(Game model, Direction dir)
+		{
+			model.Player.Move(dir);
+			model.Update();
 		}
 	}
 }

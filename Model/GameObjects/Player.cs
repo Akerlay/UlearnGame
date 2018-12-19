@@ -5,7 +5,6 @@ namespace UlearnGame.Model.GameObjects
 {
 	public class Player : GameObject
 	{
-		private Map map;
 		public int FieldOfView { get; private set; } = 2;
 		public int Keys { get; private set; }
 		public int Health { get; private set; } = 3;
@@ -14,50 +13,34 @@ namespace UlearnGame.Model.GameObjects
 		public event Action ChestTaken;
 		public event Action Dead;
 
-		public Player(Map map) => this.map = map;
-		
+		public Player(Point position) : base(position)
+		{
+			CanNotMoveTrough.Add(typeof(Wall));
+		}
+
 		public void Move(Direction dir)
 		{
-			var oldPlayerPos = map.PlayerPosition;
 			switch (dir)
 			{
 				case Direction.Up:
-					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X, map.PlayerPosition.Y - 1));
+					Destination = new Point(Position.X, Position.Y - 1);
 					break;
 				
 				case Direction.Down:
-					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X, map.PlayerPosition.Y + 1));
+					Destination = new Point(Position.X, Position.Y + 1);
 					break;
 				
 				case Direction.Left:
-					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X - 1, map.PlayerPosition.Y));
+					Destination = new Point(Position.X - 1, Position.Y);
 					break;
 				
 				case Direction.Right:
-					map.PlayerPosition = Move(oldPlayerPos, new Point(map.PlayerPosition.X + 1, map.PlayerPosition.Y));
+					Destination = new Point(Position.X + 1, Position.Y);
 					break;
 			}
 		}
-
-		private Point Move(Point oldPlayerPos, Point destination)
-		{
-			if (IsCorrectMove(destination))
-			{
-				Interact(map[destination]);
-				map.SetCell(oldPlayerPos, null);
-				map.SetCell(destination, this);
-				return destination;
-			}
-
-			return oldPlayerPos;
-		}
 		
-		private bool IsCorrectMove(Point point)
-		{
-			return !(map[point] is Wall) && !(map[point] is Chest) || map[point] is Chest && Keys > 0;
-		}
-		
-		public override void Interact(GameObject other)
+		public override bool Interact(GameObject other)
 		{
 			switch (other)
 			{
@@ -68,16 +51,16 @@ namespace UlearnGame.Model.GameObjects
 					AddKey();
 					break;
 				case Chest _:
-					RemoveKey();
+					return RemoveKey();
 					break;
 				case Enemy enemy:
-					GetDamage(enemy.Damage);
-					enemy.Kill();
-					break;
+					return GetDamage(enemy.Damage);
 				case Hearth hearth:
 					Heal(hearth.Value);
 					break;
 			}
+
+			return true;
 		}
 
 		private void IncreaseFov(int amount)
@@ -86,12 +69,17 @@ namespace UlearnGame.Model.GameObjects
 			ItemTaken?.Invoke();
 		}
 
-		private void GetDamage(int amount)
+		private bool GetDamage(int amount)
 		{
 			Health -= amount;
 			DamageTaken?.Invoke();
-			if (Health <=0)
+			if (Health <= 0)
+			{
 				Dead?.Invoke();
+				return false;
+			}
+
+			return true;
 		}
 
 		private void Heal(int amount)
@@ -106,10 +94,13 @@ namespace UlearnGame.Model.GameObjects
 			ItemTaken?.Invoke();
 		}
 
-		private void RemoveKey()
+		private bool RemoveKey()
 		{
+			if (Keys < 1)
+				return false;
 			Keys--;
 			ChestTaken?.Invoke();
+			return true;
 		}
 	}
 }
